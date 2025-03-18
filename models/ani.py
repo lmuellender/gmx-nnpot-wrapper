@@ -109,5 +109,3 @@ class GmxANIForceModel(torch.nn.Module):
         if grad is None:
             grad = torch.zeros_like(positions)
         return energy, -1. * grad.squeeze(0)
-
-

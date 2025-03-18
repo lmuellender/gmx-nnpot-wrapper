@@ -59,33 +59,3 @@ class GmxEMLEModel(torch.nn.Module):
             forces_mm = forces_mm.squeeze(0)
 
         return E_tot, forces_nn, forces_mm
-    
-
-if __name__ == "__main__":
-    
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # atomic numbers needed for nnpops
-    # sequence should be the same as in the .gro file
-    # e.g. alanine dipeptide
-    # atomic_numbers = torch.tensor([1,6,1,1,6,8,7,1,6,1,6,1,1,1,6,8,7,1,6,1,1,1])
-    atomic_numbers = None
-
-    model = GmxEMLEModel(flavour='mace', atomic_numbers=atomic_numbers, dtype=torch.float32, device=device)
-
-    # export model
-    # check for torch extension library
-    ext_lib = []
-    ext_lib.append('/nethome/mullender/anaconda3/envs/emle/lib/python3.12/site-packages/torchani/cuaev.cpython-312-x86_64-linux-gnu.so')
-    for lib in torch.ops.loaded_libraries:
-        if lib:
-            ext_lib.append(lib)
-    ext_lib = ":".join(ext_lib)
-    print("loaded extension libraries: ", ext_lib)
-    
-    # save model
-    save_path = 'models/mace_emle.pt'
-    extra_files = {}
-    if ext_lib:
-        extra_files['extension_libs'] = ext_lib
-    torch.jit.script(model).save(save_path, _extra_files=extra_files)
