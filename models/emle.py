@@ -19,6 +19,8 @@ class GmxEMLEModel(torch.nn.Module):
         elif flavour == 'mace':
             self.model = MACEEMLE(**kwargs)
             self.is_nnpops = False
+        else:
+            raise ValueError(f"Unknown flavour {flavour}. Should be one of ['ani2x', 'mace']")
 
         self.length_conversion = _NANOMETER_TO_ANGSTROM
         self.energy_conversion = _HARTREE_TO_KJ_MOL
