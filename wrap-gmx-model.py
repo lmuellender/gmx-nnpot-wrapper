@@ -3,13 +3,15 @@ import numpy as np
 import argparse as ap
 import os
 from models.gmx_ani import GmxANIModel
-from models.gmx_mace import GmxMACEModel
+from models.gmx_mace import GmxMACEModel, GmxMACEModelNoPairs
 try:
     from models.gmx_emle import GmxEMLEModel
     have_emle = True
 except ImportError:
     have_emle = False
-    
+
+# set this value to true to export a mace model that does not need pair input
+_use_nnpops_pairs = False
 
 _map_atom_number = {
     "h": 1,
@@ -126,7 +128,11 @@ if __name__ == "__main__":
             model = GmxEMLEModel(flavor="mace", atomic_numbers=atomic_numbers, model_index=args.model_index, dtype=torch.float32, device=device)
             print(f"Saving MACE-EMLE model with {args.use_opt} optimization to {args.out}")
         else:
-            raise ValueError("Invalid flavor for MACE model: {}".format(args.fname))
+            if _use_nnpops_pairs:
+                model = GmxMACEModelNoPairs(size="small", device=device)
+            else:
+                model = GmxMACEModel(size="small", device=device)
+            print(f"Saving MACE model to {args.out}")
 
     # TODO: handle MACE models
     else:
