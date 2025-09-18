@@ -1,10 +1,6 @@
 import torch
 from typing import Optional
 
-import mace
-from mace import scatter_sum
-
-
 class GmxMACEModel(torch.nn.Module):
     def __init__(self, model, **kwargs):
         super().__init__()

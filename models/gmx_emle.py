@@ -10,17 +10,17 @@ from emle._units import (
 )
 
 class GmxEMLEModel(torch.nn.Module):
-    def __init__(self, flavour: str, **kwargs):
+    def __init__(self, flavor: str, **kwargs):
         super().__init__()
 
-        if flavour == 'ani2x':
+        if flavor == 'ani2x':
             self.model = ANI2xEMLE(**kwargs)
             self.is_nnpops = self.model._is_nnpops
-        elif flavour == 'mace':
+        elif flavor == 'mace':
             self.model = MACEEMLE(**kwargs)
             self.is_nnpops = False
         else:
-            raise ValueError(f"Unknown flavour {flavour}. Should be one of ['ani2x', 'mace']")
+            raise ValueError(f"Unknown flavor {flavor}. Should be one of ['ani2x', 'mace']")
 
         self.length_conversion = _NANOMETER_TO_ANGSTROM
         self.energy_conversion = _HARTREE_TO_KJ_MOL
